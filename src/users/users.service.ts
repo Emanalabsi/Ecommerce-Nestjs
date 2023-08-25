@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/user-create.dto';
@@ -10,10 +10,10 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  findUser(username: string) {
-    return this.userRepository.findBy({ username });
+  findUserByEmail(email: string) {
+    return this.userRepository.findBy({ email });
   }
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser({ ...createUserDto }: CreateUserDto) {
     const newUser = this.userRepository.create(createUserDto);
     return this.userRepository.save(newUser);
   }
