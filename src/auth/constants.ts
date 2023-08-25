@@ -1,3 +1,5 @@
 export const jwtConstants = {
-  secret: '2m05B9jAKM',
+  JWT_EXPIRATION_TIME: '1d', // Token expiration time
+  JWT_ISSUER: 'ecommerece',
+  JWT_AUDIENCE: 'users',
 };
