@@ -26,7 +26,7 @@ export class AuthController {
     const token = this.authService.generateJwtToken(user);
     response.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
-    return response.json({ message: 'Registration successful', user });
+    return response.json({ message: 'Registration successful' });
   }
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -38,6 +38,6 @@ export class AuthController {
     const token = this.authService.generateJwtToken(user[0]);
     response.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
-    return response.json({ message: 'You are now logged in', user });
+    return response.json({ message: 'You are now logged in' });
   }
 }
