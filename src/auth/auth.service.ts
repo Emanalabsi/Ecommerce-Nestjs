@@ -1,5 +1,4 @@
-import { Body, Injectable, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dto/user-create.dto';
 import { EmailIsTakenError } from 'src/users/errors/email-is-taken.error';
 import { UserService } from 'src/users/users.service';
@@ -16,13 +15,10 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async register(
-    @Body() createUserDto: CreateUserDto,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async register(@Body() createUserDto: CreateUserDto) {
     const { email, password } = createUserDto;
     const checkUserExistence = await this.userService.findUserByEmail(email);
-    if (checkUserExistence) {
+    if (checkUserExistence[0]?.email === createUserDto.email) {
       throw new EmailIsTakenError();
     }
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -30,9 +26,6 @@ export class AuthService {
       ...createUserDto,
       password: hashedPassword,
     });
-    const token = this.generateJwtToken(savedUser);
-    response.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
-
     return savedUser;
   }
 
