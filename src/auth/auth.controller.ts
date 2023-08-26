@@ -1,15 +1,19 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/user-create.dto';
 import { UserLoginDto } from 'src/users/dto/user-login.dto';
 import { AuthService } from './auth.service';
+import { GoogleOauthGuard } from './guards/google-oauth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +32,7 @@ export class AuthController {
 
     return response.json({ message: 'Registration successful' });
   }
+
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Body() userloginDto: UserLoginDto, @Res() response: Response) {
@@ -39,5 +44,17 @@ export class AuthController {
     response.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
     return response.json({ message: 'You are now logged in' });
+  }
+
+  @Get('/google')
+  @UseGuards(GoogleOauthGuard)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async googleAuth(@Req() _req) {}
+
+  @Get('redirect')
+  @UseGuards(GoogleOauthGuard)
+  async googleAuthRedirect(@Req() req) {
+    const user = await this.authService.GoogleLogin(req);
+    return user;
   }
 }

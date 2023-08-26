@@ -43,6 +43,16 @@ export class AuthService {
     return user;
   }
 
+  async GoogleLogin(req) {
+    if (!req.user) {
+      throw new UserNotFound();
+    }
+    return {
+      message: 'User information from google',
+      user: req.user,
+    };
+  }
+
   async generateJwtToken(user: User) {
     const payload = {
       sub: user.id,
