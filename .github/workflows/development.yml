@@ -6,11 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-
     services:
       postgres:
         image: postgres:latest
@@ -26,9 +21,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Load Environment Variables
-        run: npm install -g dotenv-cli && dotenv -e .env echo "Environment variables loaded"
-
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -36,3 +28,5 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      # Add your tests or other steps here
