@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dto/user-create.dto';
-import { EmailIsTakenError } from 'src/users/errors/email-is-taken.error';
+import { EmailIsTakenError } from 'src/utils/errors/email-is-taken.error';
 import { UserService } from 'src/users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import { jwtConstants } from './constants';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { PasswordsDoesntMatch } from 'src/users/errors/passwords-not-match.error';
-import { UserNotFound } from 'src/users/errors/user-not-found.error';
+import { PasswordsDoesntMatch } from 'src/utils/errors/passwords-not-match.error';
+import { UserNotFound } from 'src/utils/errors/user-not-found.error';
 
 @Injectable()
 export class AuthService {
