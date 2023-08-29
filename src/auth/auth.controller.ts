@@ -14,10 +14,14 @@ import { CreateUserDto } from '../users/dto/user-create.dto';
 import { UserLoginDto } from '../users/dto/user-login.dto';
 import { AuthService } from './auth.service';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
+import { JwtService } from './jwt/jwt.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
@@ -27,7 +31,7 @@ export class AuthController {
   ) {
     const user = await this.authService.register(createUserDto);
 
-    const token = this.authService.generateJwtToken(user);
+    const token = this.jwtService.generateJwtToken(user);
     response.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
     return response.json({ message: 'Registration successful' });
@@ -40,7 +44,7 @@ export class AuthController {
       userloginDto.email,
       userloginDto.password,
     );
-    const token = this.authService.generateJwtToken(user[0]);
+    const token = this.jwtService.generateJwtToken(user[0]);
     response.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
     return response.json({ message: 'You are now logged in' });

@@ -1,21 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dto/user-create.dto';
-import { EmailIsTakenError } from 'src/utils/errors/email-is-taken.error';
+import { EmailIsTakenError } from 'src/errors/email-is-taken.error';
 import { UserService } from 'src/users/users.service';
-import { User } from 'src/users/entities/user.entity';
-import { jwtConstants } from './constants';
-import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
-import { PasswordsDoesntMatch } from 'src/utils/errors/passwords-not-match.error';
-import { UserNotFound } from 'src/utils/errors/user-not-found.error';
+import { PasswordsDoesntMatch } from 'src/errors/passwords-not-match.error';
+import { UserNotFound } from 'src/errors/user-not-found.error';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userService: UserService,
-    private configService: ConfigService,
-  ) {}
+  constructor(private userService: UserService) {}
 
   async register(createUserDto: CreateUserDto) {
     const { email, password } = createUserDto;
@@ -51,17 +44,5 @@ export class AuthService {
       message: 'User information from google',
       user: req.user,
     };
-  }
-
-  async generateJwtToken(user: User) {
-    const payload = {
-      sub: user.id,
-      iss: jwtConstants.JWT_ISSUER,
-      aud: jwtConstants.JWT_AUDIENCE,
-      email: user.email,
-    };
-    return jwt.sign(payload, this.configService.get('SECRET_KEY'), {
-      expiresIn: jwtConstants.JWT_EXPIRATION_TIME,
-    });
   }
 }
