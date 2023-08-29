@@ -13,8 +13,17 @@ export class UserService {
   findUserByEmail(email: string) {
     return this.userRepository.findBy({ email });
   }
+
+  findUserWithResetToken(resetToken: string) {
+    return this.userRepository.findBy({ resetToken });
+  }
+
   createUser({ ...createUserDto }: CreateUserDto) {
     const newUser = this.userRepository.create(createUserDto);
     return this.userRepository.save(newUser);
+  }
+
+  saveUser(user: User) {
+    return this.userRepository.save(user);
   }
 }
