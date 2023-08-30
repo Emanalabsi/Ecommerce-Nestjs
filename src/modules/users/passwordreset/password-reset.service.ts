@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from 'src/auth/jwt/jwt.service';
-import { MailService } from 'src/emails/mail.service';
-import { UserNotFound } from 'src/errors/user-not-found.error';
+import { JwtService } from 'src/modules/auth/jwt/jwt.service';
+import { MailService } from 'src/modules/emails/mail.service';
+import { UserNotFound } from 'src/common/errors/user-not-found.error';
 import { UserService } from '../users.service';
 
 @Injectable()

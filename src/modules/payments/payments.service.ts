@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PaymentFailed } from 'src/errors/payment-failed.error';
+import { PaymentFailed } from 'src/common/errors/payment-failed.error';
 import { Stripe } from 'stripe';
 import { Order } from './types/order';
 
