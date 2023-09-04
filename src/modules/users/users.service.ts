@@ -32,7 +32,7 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async validatePassword(storedPassword, enteredPassword) {
+  async validatePassword(storedPassword: number, enteredPassword: number) {
     return await bcrypt.compare(storedPassword, enteredPassword);
   }
 
@@ -45,7 +45,7 @@ export class UserService {
     user[0].has2FA = true;
   }
 
-  async enable2FA(userId) {
+  async enable2FA(userId: number) {
     const secret = speakeasy.generateSecret();
     const token = speakeasy.totp({
       secret: secret.base32,
@@ -59,7 +59,7 @@ export class UserService {
     await this.smsService.sendSMS(`Your PIN Code is: ${smsCode} `);
   }
 
-  async getSmsCode(userId) {
+  async getSmsCode(userId: number) {
     const user = await this.userRepository.findBy({ id: userId });
     if (!user) {
       throw new UserNotFound();

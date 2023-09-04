@@ -50,29 +50,4 @@ export class AuthService {
       user: req.user,
     };
   }
-
-  async verifyUser(email, password) {
-    const user = await this.userService.findUserByEmail(email);
-
-    if (!user) {
-      throw new UserNotFound();
-    }
-
-    if (!this.userService.validatePassword(password, user[0].password)) {
-      throw new Error('Invalid password');
-    }
-  }
-
-  async loginUserWith2FA(email, smsCode) {
-    const user = await this.userService.findUserByEmail(email);
-
-    await this.userService.enable2FA(user[0].id);
-
-    await this.userService.sendSmsCode(user[0].id);
-
-    if (!this.userService.validateSmsCode(user[0].id, smsCode)) {
-      throw new Error('Invalid SMS code');
-    }
-    return true;
-  }
 }
