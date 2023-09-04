@@ -5,40 +5,59 @@ import { UserService } from 'src/modules/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { PasswordsDoesntMatch } from 'src/common/errors/passwords-not-match.error';
 import { UserNotFound } from 'src/common/errors/user-not-found.error';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   async register(createUserDto: CreateUserDto) {
     const { email, password } = createUserDto;
+
+    //check user
     const user = await this.userService.findUserByEmail(email);
+
     if (user[0]?.email === createUserDto.email) {
       throw new EmailIsTakenError();
     }
+    //hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const savedUser = await this.userService.createUser({
+
+    //create user
+    const newUser = await this.userService.createUser({
       ...createUserDto,
       password: hashedPassword,
     });
-    return savedUser;
+
+    const token = this.generateToken(newUser);
+
+    return {
+      newUser,
+      token,
+    };
   }
 
-  async login(email, password) {
+  async login(email: string, password: string) {
+    //check user
     const user = await this.userService.findUserByEmail(email);
+
     if (user[0]?.email !== email) {
       throw new UserNotFound();
     }
 
-    const isMatch = this.userService.validatePassword(
-      password,
-      user[0].password,
-    );
+    const isMatch = await bcrypt.compare(user[0].password, password);
 
     if (!isMatch) {
       throw new PasswordsDoesntMatch();
     }
-    return user;
+    //generate token
+    const token = this.generateToken(user[0]);
+
+    return { user, token };
   }
 
   async GoogleLogin(req) {
@@ -49,5 +68,10 @@ export class AuthService {
       message: 'User information from google',
       user: req.user,
     };
+  }
+
+  private async generateToken(user: User) {
+    const token = this.jwtService.signAsync(user);
+    return token;
   }
 }

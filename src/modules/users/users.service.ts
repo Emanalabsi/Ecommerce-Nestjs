@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import speakeasy from 'speakeasy';
 import { UserNotFound } from 'src/common/errors/user-not-found.error';
 import { SmsService } from 'src/modules/sms/sms.service';
@@ -30,10 +29,6 @@ export class UserService {
 
   async saveUser(user: User) {
     return this.userRepository.save(user);
-  }
-
-  async validatePassword(storedPassword: number, enteredPassword: number) {
-    return await bcrypt.compare(storedPassword, enteredPassword);
   }
 
   async storeSmsCode(userId: number, smsCode: string) {
