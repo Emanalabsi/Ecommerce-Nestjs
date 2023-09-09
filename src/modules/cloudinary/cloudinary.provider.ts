@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { v2 } from 'cloudinary';
 
-export const CLoudinaryProviedr = {
-  provide: 'Cloudinary',
+export const CLoudinaryProvider = {
+  provide: 'CLOUDINARY',
   useFactory: (configService: ConfigService) => {
     return v2.config({
       cloud_name: configService.get('CLOUDINARY_CLOUD_NAME'),
