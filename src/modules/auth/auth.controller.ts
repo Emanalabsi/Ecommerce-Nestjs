@@ -70,25 +70,4 @@ export class AuthController {
     const user = await this.authService.GoogleLogin(req);
     return user;
   }
-
-  // @Post('login-2fa')
-  // async loginUserWith2FA(
-  //   @Body('email') email: string,
-  //   @Body('password') password: string,
-  //   @Body('smsCode') smsCode: string,
-  // ) {
-  //   await this.authService.loginUserWith2FA(email, password, smsCode);
-  //   return { message: 'Logged in with 2FA and SMS code sent' };
-  // }
-
-  // @Post('challenge/validate')
-  // async challengeValidate(email, password) {
-  //   const user = await this.authService.verifyUser(email, password);
-  //   return user;
-  // }
-
-  // @Post('otp/generate')
-  // async optGenerate(phone) {
-  //   await this.authService.loginUserWith2FA(phone);
-  // }
 }
