@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SmsController } from './sms.controller';
 import { SmsService } from './sms.service';
 import * as Twilio from 'twilio';
 
 @Module({
   imports: [ConfigModule],
-  controllers: [SmsController],
   exports: [SmsService],
   providers: [
     SmsService,

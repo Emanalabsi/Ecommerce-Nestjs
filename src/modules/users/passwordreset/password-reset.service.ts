@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from 'src/modules/auth/jwt/jwt.service';
 import { MailService } from 'src/modules/emails/mail.service';
 import { UserNotFound } from 'src/common/errors/user-not-found.error';
 import { UserService } from '../users.service';
+import { AuthService } from 'src/modules/auth/auth.service';
 
 @Injectable()
 export class PasswordResetService {
   constructor(
     private userService: UserService,
     private mailService: MailService,
-    private jwtService: JwtService,
+    private authService: AuthService,
   ) {}
 
   async initiatePasswordReset(email: string) {
@@ -18,7 +18,7 @@ export class PasswordResetService {
     if (!user) {
       throw new UserNotFound();
     }
-    user[0].resetToken = await this.jwtService.generateJwtToken(user[0]);
+    user[0].resetToken = await this.authService.generateToken(user[0]);
 
     const resetLink = `http://localhost:3000/reset-password/${user[0].resetToken}`;
 

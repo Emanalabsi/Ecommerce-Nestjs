@@ -70,7 +70,7 @@ export class AuthService {
     };
   }
 
-  private async generateToken(user: User) {
+  async generateToken(user: User) {
     const token = this.jwtService.signAsync(user);
     return token;
   }
