@@ -26,5 +26,6 @@ import { SmsModule } from 'src/modules/sms/sms.module';
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

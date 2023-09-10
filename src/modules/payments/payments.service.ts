@@ -14,19 +14,29 @@ export class PaymentService {
       apiVersion: '2023-08-16',
     });
   }
+
   async createPayment(order: Order) {
     let totalAmount = 0;
     order.products.forEach((product) => {
       totalAmount += product.price * product.quantity;
     });
 
-    const paymentIntent = this.stripe.paymentIntents.create({
-      amount: totalAmount * 100,
-      currency: order.currency,
-    });
-    if (!paymentIntent) {
+    try {
+      const paymentIntent = await this.stripe.paymentIntents.create({
+        amount: totalAmount * 100,
+        currency: order.currency,
+      });
+
+      if (
+        !paymentIntent ||
+        paymentIntent.status !== 'requires_payment_method'
+      ) {
+        throw new PaymentFailed();
+      }
+
+      return paymentIntent;
+    } catch (error) {
       throw new PaymentFailed();
     }
-    return paymentIntent;
   }
 }

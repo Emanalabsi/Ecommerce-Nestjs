@@ -71,7 +71,7 @@ export class AuthService {
   }
 
   async generateToken(user: User) {
-    const token = this.jwtService.signAsync(user);
+    const token = this.jwtService.sign({ user });
     return token;
   }
 }

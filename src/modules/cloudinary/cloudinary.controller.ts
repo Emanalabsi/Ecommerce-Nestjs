@@ -1,5 +1,4 @@
 //this is only for testing purposes rn
-
 import {
   Controller,
   Post,
@@ -11,11 +10,13 @@ import { CloudinaryService } from './cloudinary.service';
 
 @Controller('image')
 export class CloudinaryController {
-  constructor(private coudinaryService: CloudinaryService) {}
+  constructor(private cloudinaryService: CloudinaryService) {}
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  imageUpload(@UploadedFile() file: Express.Multer.File) {
-    return this.coudinaryService.uploadFile(file);
+  async imageUpload(@UploadedFile() file: Express.Multer.File) {
+    console.log('Uploaded file:', file);
+    const result = await this.cloudinaryService.uploadFile(file);
+    return result.secure_url;
   }
 }

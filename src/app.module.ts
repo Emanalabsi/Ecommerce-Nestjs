@@ -2,8 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { MailModule } from './modules/emails/mail.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 import { SmsModule } from './modules/sms/sms.module';
 import { User } from './modules/users/entities/user.entity';
+import { PasswordResetModule } from './modules/users/passwordreset/password-reset.module';
 import { UserModule } from './modules/users/users.module';
 
 @Module({
@@ -25,6 +29,10 @@ import { UserModule } from './modules/users/users.module';
     }),
     UserModule,
     AuthModule,
+    MailModule,
+    PasswordResetModule,
+    PaymentsModule,
+    CloudinaryModule,
     SmsModule,
   ],
   controllers: [],

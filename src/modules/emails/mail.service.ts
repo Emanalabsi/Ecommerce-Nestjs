@@ -1,36 +1,21 @@
-import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import nodemailer from 'nodemailer';
-import Mailgen from 'mailgen';
+import { MailerService } from '@nestjs-modules/mailer';
+import * as Mailgen from 'mailgen';
 
 @Injectable()
 export class MailService {
-  constructor(
-    private configService: ConfigService,
-    private transporter: nodemailer.Transporter,
-    private mailGenerator: Mailgen,
-  ) {
-    this.transporter = nodemailer.createTransport({
-      host: 'smtp.forwardemail.net',
-      port: 465,
-      secure: true,
-      auth: {
-        user: configService.get('EMAIL_USER'),
-        pass: configService.get('EMAIL_PASS'),
-      },
-    });
+  constructor(private readonly mailerService: MailerService) {}
 
-    this.mailGenerator = new Mailgen({
+  async sendPasswordResetEmail(toEmail: string, resetLink: string) {
+    const mailGenerator = new Mailgen({
       theme: 'default',
       product: {
         name: 'My NestJS App',
         link: 'https://nestjs-app.com',
       },
     });
-  }
 
-  async sendPasswordResetEmail(toEmail: string, resetLink: string) {
-    const email = {
+    const emailBody = {
       body: {
         name: 'John Appleseed',
         intro:
@@ -44,17 +29,18 @@ export class MailService {
           },
         },
         outro:
-          'If you did not request a password reset, no further action is required on your part. .',
+          'If you did not request a password reset, no further action is required on your part.',
       },
     };
-    const emailBody = this.mailGenerator.generate(email);
 
-    const info = await this.transporter.sendMail({
-      from: this.configService.get('EMAIL_USER'),
+    const emailTemplate = mailGenerator.generate(emailBody);
+
+    await this.mailerService.sendMail({
       to: toEmail,
       subject: 'Password Reset Request',
-      html: emailBody,
+      html: emailTemplate,
     });
-    console.log('Password reset email sent: %s', info.messageId);
+
+    console.log('Password reset email sent to: %s', toEmail);
   }
 }
