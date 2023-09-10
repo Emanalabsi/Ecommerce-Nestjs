@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
 import { AuthModule } from './modules/auth/auth.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { MailModule } from './modules/emails/mail.module';
@@ -24,6 +25,14 @@ import { UserModule } from './modules/users/users.module';
         database: configService.get('DB_NAME'),
         entities: [User],
         synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
+    GoogleRecaptchaModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        secretKey: configService.get<string>('GOOGLE_RECAPTCHA_SECRET_KEY'),
+        response: (req) => req.headers.recaptcha,
+        skipIf: configService.get<string>('NODE_ENV') !== 'production',
       }),
       inject: [ConfigService],
     }),
