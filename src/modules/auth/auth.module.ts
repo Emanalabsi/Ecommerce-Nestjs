@@ -15,7 +15,7 @@ import { SmsModule } from 'src/modules/sms/sms.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         global: true,
-        secret: configService.get<string>('SECRET_KEY'),
+        secret: configService.get<string>('JWT_SECRET_KEY'),
         signOptions: { expiresIn: '10h' },
       }),
       inject: [ConfigService],
